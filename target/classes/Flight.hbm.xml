@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name="com.fh.FlightDetail" table="routing">
+      <meta attribute="class-description">
+         This class contains the flight detail. 
+      </meta>
+      <id name="id" type="int" column="id">
+         <generator class="native"/>
+      </id>
+      <property name="source" column="source" type="string"/>
+      <property name="destination" column="destination" type="string"/>
+      <property name="flight_no" column="flight_no" type="string"/>
+      <property name="date" column="Date" type="string"/>
+      <property name="departure_time" column="departure_time" type="string"/>
+      <property name="arrival_time" column="arrival_time" type="string"/>
+      <property name="no_of_seats" column="no_of_seats" type="int"/>
+      <property name="price" column="price" type="double"/>
+      
+	  
+   </class>
+</hibernate-mapping>
