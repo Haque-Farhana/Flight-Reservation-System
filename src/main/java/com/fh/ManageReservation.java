@@ -22,14 +22,12 @@ public class ManageReservation {
 		Session session = factory.openSession();
 		System.out.println("Inside ListFlight");
 		Transaction tx = null;
-		// String pnr = null;
 		boolean isValid = false;
 		try {
 			tx = session.beginTransaction();
 			if (session.createQuery("FROM Passenger p WHERE p.username = '" + username + "' AND p.password = '"
 					+ password + "'") != null) {
 				isValid = true;
-				// pnr = randomPNRGenerator(6);
 			} else
 				System.out.println("Result not found!!");
 			tx.commit();
@@ -40,27 +38,45 @@ public class ManageReservation {
 		} finally {
 			session.close();
 		}
-		// return pnr;
 		return isValid;
 	}
 
-	// public Integer addReservation(String pnr, String source, String destination,
-	// String flight_no) {
-	// Session session = factory.openSession();
-	// Transaction tx = null;
-	// Integer flightID = null;
-	// try {
-	// tx = session.beginTransaction();
-	// Card flight = new Card(source, destination, flight_no);
-	// flightID = (Integer) session.save(flight);
-	// tx.commit();
-	// } catch (HibernateException e) {
-	// if (tx != null)
-	// tx.rollback();
-	// e.printStackTrace();
-	// } finally {
-	// session.close();
-	// }
-	// return flightID;
-	// }
+	public Integer addReservation(Reservation book) {
+		Session session = factory.openSession();
+		Transaction tx = null;
+		Integer bookID = null;
+		try {
+			System.out.println("Inside add reservation");
+			tx = session.beginTransaction();
+			int id = 0;
+			Reservation reserve = new Reservation(book.getPnr(), book.getUsername(), book.getFlight_no(),
+					book.getNo_of_tickets(), book.getPrice());
+			// Reservation c = (Reservation) session.get(Reservation.class, book.getId());
+			// // TODO: Why are we
+			// // getting the card
+			// c.setUsername(book.getUsername());
+			// c.setPnr(book.getPnr());
+			// c.setFlight_no(book.getFlight_no());
+			// c.setPrice(book.getPrice());
+			// c.setNo_of_tickets(book.getNo_of_tickets());
+			// c.setId(book.getId());
+			// // c.setCard_no(card.getCard_no());
+			// // c.setCcv(card.getCard_no());
+			// // c.setAmount(card.getAmount());
+			// // id = c.getId();
+			bookID = (Integer) session.save(reserve);
+
+			// bookID = (Integer) session.save(book);
+			tx.commit();
+			System.out.println("After commit");
+			System.out.println(bookID);
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return bookID;
+	}
 }

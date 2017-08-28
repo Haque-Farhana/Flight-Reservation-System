@@ -1,9 +1,11 @@
+com\fh\PaymentController.class
 com\fh\DBUtil.class
 com\fh\ManageFlight.class
 com\fh\LoginIdGenerator.class
+com\fh\FlightController.class
 com\fh\Reservation.class
+com\fh\ExternalCardService.class
 com\fh\ManageReservation.class
-com\fh\LoginController.class
 com\fh\Passenger.class
 com\fh\FlightDetail.class
 com\fh\ManageLogin.class

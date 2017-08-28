@@ -12,8 +12,10 @@
       <id name="id" type="int" column="id">
          <generator class="native"/>
       </id>
-      <property name="card_no" column="card_no" type="string"/>
-      <property name="ccv" column="ccv" type="string"/>
-      <property name="amount" column="amount" type="double"/>
+      <property name="pnr" column="pnr" type="string"/>
+      <property name="username" column="username" type="string"/>
+      <property name="flight_no" column="flight_no" type="string"/>
+      <property name="no_of_tickets" column="no_of_tickets" type="int"/>
+      <property name="price" column="price" type="double"/>
    </class>
 </hibernate-mapping>

@@ -7,6 +7,8 @@
 <title>Flight Confirmation</title>
 </head>
 <body>
-	<p>Flight confirmation number : <%=request.getAttribute("PNR") %></p>
+	<h1>Flight Confirmation</h1>
+	Your payment was successful.
+	<p>Your Flight Confirmation # <%=request.getAttribute("PNR") %></p>
 </body>
 </html>
