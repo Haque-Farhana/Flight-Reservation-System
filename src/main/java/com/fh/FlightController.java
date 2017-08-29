@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -37,7 +38,7 @@ public class FlightController {
 	}
 
 	@RequestMapping(value = "/payment")
-	public ModelAndView processPayment(@ModelAttribute("myRequestObject") Reservation requestObj, Model model,
+	public ModelAndView processPaymentGET(@ModelAttribute("myRequestObject") Reservation requestObj, Model model,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String card_no = request.getParameter("card_no");
 		String ccv = request.getParameter("ccv");
@@ -54,17 +55,17 @@ public class FlightController {
 		ExternalCardService cardService = new ExternalCardService();
 		if (cardService.isCardValid(card_no, ccv, amount)) {
 			requestObj.setPnr(randomPNRGenerator(6));
-			mv.setViewName("confirmation");
 			mv.addObject("PNR", requestObj.getPnr());
+			ManageFlight flight = new ManageFlight();
+
+			int flightID = (Integer) session.getAttribute("flightSelect");
+			System.out.println(flightID);
+			flight.updateSeatNo(flightID, requestObj.getNo_of_tickets());
 
 			ManageReservation reserve = new ManageReservation();
-			System.out.println(requestObj.getUsername());
-			System.out.println(requestObj.getPnr());
-			System.out.println(requestObj.getFlight_no());
-			System.out.println(requestObj.getNo_of_tickets());
-			System.out.println(requestObj.getPrice());
 			int reserveID = reserve.addReservation(requestObj);
-			System.out.println(reserveID);
+			mv.setViewName("confirmation");
+
 		} else {
 			mv.setViewName("payment");
 		}
@@ -76,9 +77,11 @@ public class FlightController {
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 
 		String username = request.getParameter("username");
-		int phone_no = Integer.parseInt(request.getParameter("phone_no"));
 		String email = request.getParameter("email");
-		int age = Integer.parseInt(request.getParameter("age"));
+		String phone_no = (request.getParameter("phone_no"));
+		String age = (request.getParameter("age"));
+		// int phone_no = Integer.parseInt(request.getParameter("phone_no"));
+		// int age = Integer.parseInt(request.getParameter("age"));
 
 		requestObj.setUsername(username);
 		System.out.println("Username: " + requestObj.getUsername());
@@ -96,7 +99,7 @@ public class FlightController {
 	public ModelAndView processSelect(@ModelAttribute("myRequestObject") Reservation requestObj, Model model,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		int id = Integer.parseInt(request.getParameter("fselect"));
-
+		// request.setAttribute("flightSelect", id);
 		ManageFlight mf = new ManageFlight();
 		FlightDetail flight = mf.getFlight(id);
 		double total_price = requestObj.getNo_of_tickets() * flight.getPrice();
@@ -105,7 +108,9 @@ public class FlightController {
 
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("passenger");
-
+		// mv.addObject("flightSelect", id);
+		session.setAttribute("flightSelect", id);
+		System.out.println("Inside Process flight: " + id);
 		return mv;
 	}
 
@@ -135,6 +140,15 @@ public class FlightController {
 
 	}
 	
+	@RequestMapping("/endsession")
+	public String nextHandlingMethod2(@ModelAttribute("myRequestObject") Reservation requestObj,
+			SessionStatus status) {
+		System.err.println("EndSession  : " + requestObj.toString());
+		status.setComplete();
+		return "lastpage";
+
+	}
+
 	public String randomPNRGenerator(int count) {
 		final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		StringBuilder builder = new StringBuilder();

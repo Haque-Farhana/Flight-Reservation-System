@@ -88,14 +88,16 @@ public class ManageFlight {
 	// }
 
 	/* Method to UPDATE flight seat number */
-	public void updateSeatNo(Integer flightID, int seat_no) {
+	public void updateSeatNo(int flightID, int seat_no) {
 		Session session = factory.openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
 			FlightDetail flight = (FlightDetail) session.get(FlightDetail.class, flightID);
-			flight.setNo_of_seats(seat_no);
+			int updatedSeat = flight.getNo_of_seats() - seat_no;
+			flight.setNo_of_seats(updatedSeat);
 			session.update(flight);
+			System.out.println("Updated seat no: " + updatedSeat);
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null)
